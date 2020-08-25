@@ -18,7 +18,7 @@ I have plotted the population of India's cities on a map on a map of India.
 The datasource used is from: https://worldpopulationreview.com/countries/cities/india
 
 ```{r}
-data <- read.csv("C:/Users/EAStone/Documents/Data Products/Map assignment/City.csv", header=TRUE)
+data <- read.csv("City.csv", header=TRUE)
 head(data)
 ```
 
