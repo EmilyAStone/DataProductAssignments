@@ -27,7 +27,6 @@ head(data)
 ```{r}
 data$latitude<- as.numeric(substring(data$location, regexpr("=", data$location) + 1,regexpr(",", data$location)-1 ))
 data$longitude<- as.numeric(substring(data$location, regexpr(",", data$location) + 1))
-data
 ```
 
 
