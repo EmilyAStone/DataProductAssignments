@@ -1,0 +1,53 @@
+---
+title: "India cities"
+author: "Emily Stone"
+date: "24/08/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+I have plotted the population of India's cities on a map on a map of India.
+
+## Data
+
+The datasource used is from: https://worldpopulationreview.com/countries/cities/india
+
+```{r}
+data <- read.csv("C:/Users/EAStone/Documents/Data Products/Map assignment/City.csv", header=TRUE)
+head(data)
+```
+
+## Geting latitude and longitude coordinates
+
+```{r}
+data$latitude<- as.numeric(substring(data$location, regexpr("=", data$location) + 1,regexpr(",", data$location)-1 ))
+data$longitude<- as.numeric(substring(data$location, regexpr(",", data$location) + 1))
+data
+```
+
+
+## Map
+
+```{r}
+data<- data[0:15,]
+lngmean<- mean(data$longitude)
+latmean<- mean(data$latitude)
+
+library(leaflet)
+map <- data %>%
+        leaflet() %>%
+        addTiles() %>%
+        setView(lng = lngmean, lat = latmean, zoom = 4.5) %>%
+        addMarkers(popup = paste("City: ", data$name, "<br>",
+                                 "Population: ", data$pop), 
+        lng = data$longitude, lat = data$latitude)%>% 
+        addCircles(weight=1,radius=data$Population/100)
+map
+```        
+        
+       

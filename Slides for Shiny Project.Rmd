@@ -1,0 +1,108 @@
+---
+title: "Shiny Project Presentation"
+author: "Emily Stone"
+date: "25/08/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## Introduction
+
+This App allows you to explore the mtcars data set. 
+
+The member can select the variable that they with to model, the dependent variables they wish to be included in multi-variate regression and the dependent variable they wish for the independent variable to be plotted against.
+
+The App then produces a summary of the model coefficients in table.
+
+## The data 
+
+The table below shows the data used by the APP
+
+```{r, echo = TRUE}
+head(mtcars)
+```
+
+## The User interface
+
+The UI code was as follows
+
+```{r, echo = TRUE,eval= FALSE}
+library(shiny)
+
+dat <- mtcars
+
+shinyUI(pageWithSidebar(
+    headerPanel("Multivariate regression on the motor cars data set"),
+    
+    sidebarPanel(
+        selectInput("dependent", "Dependent Variable:", names(dat)),
+        uiOutput("independent")
+    ),
+    
+    mainPanel(tableOutput("regTab"))
+))
+```
+
+## The server
+The server code was as follows
+
+```{r, echo = TRUE,eval= FALSE}
+library(shiny)
+
+dat <- mtcars
+library(ggplot2)
+
+shinyServer(function(input, output, session) {
+    
+    output$independent <- renderUI({
+        checkboxGroupInput("independent", "Independent Variables:",names(dat)[!names(dat) %in% input$dependent],names(dat)[!names(dat) %in% input$dependent])
+    })
+    
+    runRegression <- reactive({
+        lm(as.formula(paste(input$dependent," ~ ",paste(input$independent,collapse="+"))),data=dat)
+    })
+    
+
+```
+
+
+## The server continued
+
+```{r, echo = TRUE,eval= FALSE}
+
+    output$regTab <- renderTable({
+        if(!is.null(input$independent)){
+            summary(runRegression())$coefficients
+        } else {
+            print(data.frame(Warning="Please select Model Parameters."))
+        }
+    }, include.rownames=TRUE)
+})
+    
+ 
+
+```
+
+## An example of the output
+
+Suppose a member selected the following:
+
+-  Dependent variable: hp
+-  Independent variables: mpg, cyl
+
+
+It would produce the following table:
+```{r, echo = FALSE,eval= TRUE}
+regression<- lm(hp~ mpg +cyl,data=mtcars)
+summary(regression)$coefficients
+```
+
+
+
+
+
+
+

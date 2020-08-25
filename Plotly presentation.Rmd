@@ -1,0 +1,24 @@
+---
+title: "Slide with Plotly"
+author: "Emily Stone"
+date: "25/08/2020"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+## R Markdown
+
+This is an R Markdown presentationand in the following slide their is a plot_ly plot. 
+
+
+## Slide with Plot_ly
+
+```{r, echo=FALSE, message=FALSE}
+library(plotly)
+data(airmiles)
+plot_ly(x= time(airmiles),y=airmiles)
+```
+
